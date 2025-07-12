@@ -369,6 +369,61 @@
             color: white;
         }
         
+        /* Popup Styles */
+        .popup-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .popup-content {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+        
+        .close-popup {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--danger-color);
+        }
+        
+        .student-details-popup h3 {
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+        
+        .student-details-popup .detail-row {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        
+        .student-details-popup .detail-label {
+            font-weight: 600;
+            width: 120px;
+            color: var(--text-color);
+        }
+        
+        .student-details-popup .detail-value {
+            flex: 1;
+        }
+        
         @media (max-width: 768px) {
             .section-tabs {
                 flex-direction: column;
@@ -463,6 +518,38 @@
             font-size: 0.8em;
             color: var(--text-light);
         }
+
+        .teaching-dates {
+            margin-top: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .teaching-date-item {
+            padding: 5px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .teaching-date-item:last-child {
+            border-bottom: none;
+        }
+
+        .toggle-dates {
+            color: var(--primary-color);
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-top: 5px;
+            display: inline-block;
+        }
+
+        .toggle-dates:hover {
+            text-decoration: underline;
+        }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- Firebase SDK -->
@@ -471,6 +558,38 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
 </head>
 <body>
+    <!-- Popup Container -->
+    <div id="student-popup" class="popup-container">
+        <div class="popup-content student-details-popup">
+            <span class="close-popup">&times;</span>
+            <h3 id="popup-student-name"></h3>
+            <div class="detail-row">
+                <span class="detail-label">সেকশন:</span>
+                <span class="detail-value" id="popup-student-section"></span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">ফোন:</span>
+                <span class="detail-value" id="popup-student-phone"></span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">রেজিস্ট্রেশন তারিখ:</span>
+                <span class="detail-value" id="popup-student-reg-date"></span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">বর্তমান সাইকেল:</span>
+                <span class="detail-value" id="popup-student-cycle"></span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">মোট ক্লাস:</span>
+                <span class="detail-value" id="popup-student-classes"></span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">মোট বেতন:</span>
+                <span class="detail-value" id="popup-student-payments"></span>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
         <!-- Firebase Auth UI -->
         <div id="auth-container">
@@ -739,6 +858,16 @@
             
             // Initialize history student dropdown
             document.getElementById('history-student-select').addEventListener('change', loadCycleHistory);
+            
+            // Initialize popup close button
+            document.querySelector('.close-popup').addEventListener('click', closeStudentPopup);
+            
+            // Close popup when clicking outside
+            document.getElementById('student-popup').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeStudentPopup();
+                }
+            });
         });
         
         // Authentication functions
@@ -1090,7 +1219,11 @@
                 classCount: studentTeachings
                     .filter(t => new Date(t.date) >= new Date(student.currentCycleStart))
                     .length,
-                cycleType: 'current'
+                cycleType: 'current',
+                teachingDates: studentTeachings
+                    .filter(t => new Date(t.date) >= new Date(student.currentCycleStart))
+                    .map(t => t.date)
+                    .sort((a, b) => new Date(b) - new Date(a))
             });
             
             // Add previous cycles
@@ -1103,7 +1236,11 @@
                     classCount: studentTeachings
                         .filter(t => new Date(t.date) >= new Date(payment.date) && new Date(t.date) <= new Date(nextDate))
                         .length,
-                    cycleType: 'previous'
+                    cycleType: 'previous',
+                    teachingDates: studentTeachings
+                        .filter(t => new Date(t.date) >= new Date(payment.date) && new Date(t.date) <= new Date(nextDate))
+                        .map(t => t.date)
+                        .sort((a, b) => new Date(b) - new Date(a))
                 });
                 nextDate = payment.date;
             });
@@ -1118,7 +1255,11 @@
                     classCount: studentTeachings
                         .filter(t => new Date(t.date) >= new Date(student.currentCycleStart) && new Date(t.date) <= new Date(firstPayment.date))
                         .length,
-                    cycleType: 'previous'
+                    cycleType: 'previous',
+                    teachingDates: studentTeachings
+                        .filter(t => new Date(t.date) >= new Date(student.currentCycleStart) && new Date(t.date) <= new Date(firstPayment.date))
+                        .map(t => t.date)
+                        .sort((a, b) => new Date(b) - new Date(a))
                 });
             }
             
@@ -1170,10 +1311,33 @@
                             <div class="stat-label">বেতনের তারিখ</div>
                         </div>` : ''}
                     </div>
+                    <div class="toggle-dates" onclick="toggleTeachingDates(this)">
+                        <i class="fas fa-calendar-alt"></i> পড়ানোর তারিখগুলো দেখুন
+                    </div>
+                    <div class="teaching-dates" style="display:none;">
+                        ${cycle.teachingDates.map(date => `
+                            <div class="teaching-date-item">
+                                <span>${formatDate(date)}</span>
+                                <span class="badge badge-primary">পড়ানো হয়েছে</span>
+                            </div>
+                        `).join('')}
+                    </div>
                 `;
                 
                 container.appendChild(cycleCard);
             });
+        }
+        
+        // Toggle teaching dates visibility
+        function toggleTeachingDates(element) {
+            const datesContainer = element.nextElementSibling;
+            if (datesContainer.style.display === 'none') {
+                datesContainer.style.display = 'block';
+                element.innerHTML = '<i class="fas fa-calendar-alt"></i> পড়ানোর তারিখগুলো লুকান';
+            } else {
+                datesContainer.style.display = 'none';
+                element.innerHTML = '<i class="fas fa-calendar-alt"></i> পড়ানোর তারিখগুলো দেখুন';
+            }
         }
         
         // Render attendance list for a section
@@ -1205,7 +1369,7 @@
                 
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${student.name}</td>
+                    <td><span class="student-name-link" onclick="showStudentDetails('${student.id}')">${student.name}</span></td>
                     <td>${student.phone || 'N/A'}</td>
                     <td>${attendedClasses}</td>
                     <td class="checkbox-cell"><input type="checkbox" class="teaching-check" data-id="${student.id}" ${isMarkedToday ? 'checked' : ''}></td>
@@ -1246,7 +1410,7 @@
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>সেকশন ${student.section}</td>
-                    <td>${student.name}</td>
+                    <td><span class="student-name-link" onclick="showStudentDetails('${student.id}')">${student.name}</span></td>
                     <td>${student.phone || 'N/A'}</td>
                     <td>${attendedClasses}</td>
                     <td>${paymentCount} বার</td>
@@ -1283,6 +1447,47 @@
                 `;
                 tableBody.appendChild(row);
             });
+        }
+        
+        // Show student details in popup
+        function showStudentDetails(studentId) {
+            const student = students.find(s => s.id === studentId);
+            if (!student) return;
+            
+            // Calculate student statistics
+            const lastPaymentDate = paymentRecords
+                .filter(record => record.studentId === studentId)
+                .sort((a, b) => new Date(b.date) - new Date(a.date))[0]?.date || student.currentCycleStart;
+            
+            const attendedClasses = teachingRecords.filter(record => 
+                record.studentId === studentId && 
+                new Date(record.date) >= new Date(lastPaymentDate)
+            ).length;
+            
+            const totalClasses = teachingRecords.filter(record => 
+                record.studentId === studentId
+            ).length;
+            
+            const totalPayments = paymentRecords.filter(record => 
+                record.studentId === studentId
+            ).length;
+            
+            // Populate popup content
+            document.getElementById('popup-student-name').textContent = student.name;
+            document.getElementById('popup-student-section').textContent = `সেকশন ${student.section}`;
+            document.getElementById('popup-student-phone').textContent = student.phone || 'N/A';
+            document.getElementById('popup-student-reg-date').textContent = formatDate(student.currentCycleStart);
+            document.getElementById('popup-student-cycle').textContent = formatDate(student.currentCycleStart) + ' থেকে বর্তমান';
+            document.getElementById('popup-student-classes').textContent = `${totalClasses} দিন (বর্তমান সাইকেলে ${attendedClasses} দিন)`;
+            document.getElementById('popup-student-payments').textContent = `${totalPayments} বার`;
+            
+            // Show popup
+            document.getElementById('student-popup').style.display = 'flex';
+        }
+        
+        // Close student popup
+        function closeStudentPopup() {
+            document.getElementById('student-popup').style.display = 'none';
         }
         
         // Save records
