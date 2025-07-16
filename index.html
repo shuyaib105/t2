@@ -4,252 +4,606 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>স্টুডেন্ট ম্যানেজমেন্ট সিস্টেম</title>
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary: #4361ee;
+            --primary-light: #e0e7ff;
+            --primary-dark: #3a0ca3;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --info: #4895ef;
+            --warning: #f8961e;
+            --danger: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --gray-light: #e9ecef;
+            --white: #ffffff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 6px 12px rgba(0, 0, 0, 0.15);
+            --radius: 8px;
+            --radius-sm: 4px;
+            --transition: all 0.3s ease;
+        }
+
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
             font-family: 'Hind Siliguri', sans-serif;
         }
+
         body {
             background-color: #f5f7fa;
             margin: 0;
-            padding: 20px;
-            color: #333;
+            padding: 0;
+            color: var(--dark);
+            line-height: 1.6;
         }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: var(--white);
+            padding: 25px;
+            text-align: center;
+            border-radius: var(--radius);
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            position: relative;
             overflow: hidden;
         }
-        .header {
-            background: linear-gradient(135deg, #6B73FF 0%, #000DFF 100%);
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
+
         .header h1 {
             margin: 0;
-            font-size: 28px;
-            font-weight: 600;
+            font-size: 32px;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
         }
+
+        .header h4 {
+            margin-top: 10px;
+            font-weight: 500;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path fill="rgba(255,255,255,0.05)" d="M0,0 L100,0 L100,100 L0,100 Z" /></svg>');
+            background-size: cover;
+            opacity: 0.5;
+        }
+
+        /* Tabs */
         .tabs {
             display: flex;
-            background: #f8f9fa;
-            border-bottom: 1px solid #ddd;
+            background: var(--white);
+            border-radius: var(--radius) var(--radius) 0 0;
+            box-shadow: var(--shadow);
             flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
         }
+
         .tab {
             padding: 15px 25px;
             cursor: pointer;
             font-weight: 600;
-            color: #555;
+            color: var(--gray);
             border-bottom: 3px solid transparent;
-            transition: all 0.3s;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
+
+        .tab i {
+            font-size: 18px;
+        }
+
+        .tab:hover {
+            color: var(--primary);
+            background: var(--primary-light);
+        }
+
         .tab.active {
-            color: #000DFF;
-            border-bottom: 3px solid #000DFF;
-            background: white;
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+            background: var(--white);
         }
+
+        /* Tab Content */
         .tab-content {
             display: none;
+            background: var(--white);
+            border-radius: 0 0 var(--radius) var(--radius);
+            box-shadow: var(--shadow);
             padding: 25px;
+            animation: fadeIn 0.3s ease;
         }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .tab-content.active {
             display: block;
         }
+
+        /* Cards */
+        .card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .card-header h2 {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin: 0;
+        }
+
+        /* Forms */
         .form-group {
             margin-bottom: 20px;
         }
+
         .form-row {
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
+            margin-bottom: 15px;
         }
+
         .form-col {
             flex: 1;
             min-width: 200px;
         }
+
         label {
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
-            color: #555;
+            color: var(--dark);
         }
-        input, select {
+
+        input, select, textarea {
             width: 100%;
             padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
+            border: 1px solid var(--gray-light);
+            border-radius: var(--radius-sm);
             font-size: 16px;
-            transition: border 0.3s;
+            transition: var(--transition);
+            background: var(--white);
         }
-        input:focus, select:focus {
-            border-color: #6B73FF;
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary);
             outline: none;
-            box-shadow: 0 0 0 3px rgba(107, 115, 255, 0.2);
+            box-shadow: 0 0 0 3px var(--primary-light);
         }
+
+        /* Buttons */
         .btn {
-            background: linear-gradient(135deg, #6B73FF 0%, #000DFF 100%);
-            color: white;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: var(--white);
             border: none;
             padding: 12px 25px;
-            border-radius: 6px;
+            border-radius: var(--radius-sm);
             cursor: pointer;
             font-size: 16px;
             font-weight: 600;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
         }
+
+        .btn i {
+            font-size: 14px;
+        }
+
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(107, 115, 255, 0.3);
+            box-shadow: var(--shadow-md);
+            opacity: 0.9;
         }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-sm {
+            padding: 8px 15px;
+            font-size: 14px;
+        }
+
         .btn-secondary {
-            background: #6c757d;
+            background: var(--gray);
         }
+
         .btn-danger {
-            background: #dc3545;
+            background: var(--danger);
         }
+
         .btn-success {
-            background: #28a745;
+            background: var(--success);
         }
+
         .btn-info {
-            background: #17a2b8;
+            background: var(--info);
         }
+
         .btn-warning {
-            background: #ffc107;
-            color: #212529;
+            background: var(--warning);
+            color: var(--dark);
         }
+
+        /* Tables */
         .table-container {
             overflow-x: auto;
             margin-top: 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
         }
+
         .student-table {
             width: 100%;
             border-collapse: collapse;
             min-width: 800px;
         }
+
         .student-table th, .student-table td {
-            padding: 12px 15px;
+            padding: 15px;
             text-align: left;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid var(--gray-light);
         }
+
         .student-table th {
-            background-color: #f8f9fa;
+            background-color: var(--primary);
+            color: var(--white);
             font-weight: 600;
-            color: #555;
             position: sticky;
             top: 0;
         }
-        .student-table tr:hover {
-            background-color: #f8f9fa;
+
+        .student-table tr:nth-child(even) {
+            background-color: var(--light);
         }
+
+        .student-table tr:hover {
+            background-color: var(--primary-light);
+        }
+
         .action-btns {
             display: flex;
             gap: 10px;
             white-space: nowrap;
         }
+
+        /* Empty State */
         .no-data {
             text-align: center;
-            padding: 30px;
-            color: #6c757d;
+            padding: 40px;
+            color: var(--gray);
             font-style: italic;
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
         }
+
+        .no-data i {
+            font-size: 40px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        /* Search */
         .search-bar {
+            position: relative;
             margin-bottom: 20px;
         }
+
         .search-bar input {
             width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
+            padding: 12px 15px 12px 45px;
+            border: 1px solid var(--gray-light);
+            border-radius: var(--radius);
             font-size: 16px;
+            box-shadow: var(--shadow);
         }
-        .attendance-checkbox {
-            width: 20px;
-            height: 20px;
+
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
         }
-        .date-input {
-            min-width: 120px;
+
+        /* Custom Checkbox */
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            position: relative;
+            padding-left: 35px;
+            cursor: pointer;
+            user-select: none;
         }
-        .report-filter {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 20px;
+
+        .checkbox-container input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
         }
-        .reset-section {
-            background: #fff8e1;
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            border: 1px solid #ffe0b2;
+
+        .checkmark {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            height: 22px;
+            width: 22px;
+            background-color: var(--white);
+            border: 1px solid var(--gray-light);
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
         }
+
+        .checkbox-container:hover input ~ .checkmark {
+            background-color: var(--primary-light);
+        }
+
+        .checkbox-container input:checked ~ .checkmark {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
+
+        .checkbox-container input:checked ~ .checkmark:after {
+            display: block;
+        }
+
+        .checkbox-container .checkmark:after {
+            left: 7px;
+            top: 3px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        /* Modals */
         .modal {
             display: none;
             position: fixed;
-            z-index: 1;
+            z-index: 1000;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgba(0,0,0,0.4);
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s;
         }
+
         .modal-content {
-            background-color: #fefefe;
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
+            background-color: var(--white);
+            margin: 10% auto;
+            padding: 25px;
+            border-radius: var(--radius);
+            width: 90%;
             max-width: 600px;
-            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            animation: slideDown 0.3s;
         }
+
+        @keyframes slideDown {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            color: var(--primary-dark);
+        }
+
         .close {
-            color: #aaa;
-            float: right;
+            color: var(--gray);
             font-size: 28px;
             font-weight: bold;
             cursor: pointer;
+            transition: var(--transition);
         }
+
         .close:hover {
-            color: black;
+            color: var(--danger);
+            transform: rotate(90deg);
         }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            padding: 15px 25px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1001;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            background: var(--success);
+        }
+
+        .toast.error {
+            background: var(--danger);
+        }
+
+        .toast.warning {
+            background: var(--warning);
+        }
+
+        /* Loading */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: var(--white);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-success {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .badge-danger {
+            background: var(--danger);
+            color: var(--white);
+        }
+
+        .badge-warning {
+            background: var(--warning);
+            color: var(--dark);
+        }
+
+        .badge-info {
+            background: var(--info);
+            color: var(--white);
+        }
+
+        /* Edit buttons */
         .edit-date-btn {
             background: none;
             border: none;
-            color: #17a2b8;
+            color: var(--info);
             cursor: pointer;
             text-decoration: underline;
+            font-size: 12px;
+            margin-left: 5px;
+            transition: var(--transition);
         }
+
+        .edit-date-btn:hover {
+            color: var(--primary-dark);
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
             .form-col {
                 flex: 100%;
             }
+            
             .action-btns {
-                flex-direction: row;
-                flex-wrap: wrap;
+                flex-direction: column;
+                gap: 5px;
             }
+            
             .btn {
-                width: auto;
+                width: 100%;
             }
+            
             .tabs {
                 flex-direction: column;
             }
+            
             .tab {
-                border-bottom: 1px solid #ddd;
+                border-bottom: 1px solid var(--gray-light);
                 border-left: 3px solid transparent;
+                justify-content: center;
             }
+            
             .tab.active {
-                border-left: 3px solid #000DFF;
-                border-bottom: 1px solid #ddd;
+                border-left: 3px solid var(--primary);
+                border-bottom: 1px solid var(--gray-light);
             }
+            
             .modal-content {
                 width: 95%;
                 margin: 20% auto;
+            }
+            
+            .student-table th, .student-table td {
+                padding: 10px 5px;
+                font-size: 14px;
             }
         }
     </style>
@@ -258,30 +612,41 @@
     <div class="container">
         <div class="header">
             <h1>স্টুডেন্ট ম্যানেজমেন্ট সিস্টেম</h1>
+            <h4>APP VERSION : 0.02</h4>
         </div>
         
         <div class="tabs">
-            <div class="tab active" onclick="switchTab('studentTab')">স্টুডেন্ট তথ্য</div>
-            <div class="tab" onclick="switchTab('attendanceTab')">পড়ানোর তথ্য</div>
-            <div class="tab" onclick="switchTab('historyTab')">পূর্বের ইতিহাস</div>
-            <div class="tab" onclick="switchTab('reportTab')">রিপোর্ট</div>
+            <div class="tab active" onclick="switchTab('studentTab')">
+                <i class="fas fa-user-graduate"></i> স্টুডেন্ট তথ্য
+            </div>
+            <div class="tab" onclick="switchTab('attendanceTab')">
+                <i class="fas fa-calendar-check"></i> পড়ানোর তথ্য
+            </div>
+            <div class="tab" onclick="switchTab('historyTab')">
+                <i class="fas fa-history"></i> পূর্বের ইতিহাস
+            </div>
+            <div class="tab" onclick="switchTab('reportTab')">
+                <i class="fas fa-chart-bar"></i> রিপোর্ট
+            </div>
         </div>
         
         <!-- স্টুডেন্ট তথ্য ট্যাব -->
         <div id="studentTab" class="tab-content active">
-            <div class="form-section">
-                <h2>স্টুডেন্ট তথ্য যোগ করুন</h2>
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-user-plus"></i> স্টুডেন্ট তথ্য যোগ করুন</h2>
+                </div>
                 <form id="studentForm">
                     <div class="form-row">
                         <div class="form-col">
                             <div class="form-group">
-                                <label for="name">স্টুডেন্টের নাম</label>
+                                <label for="name"><i class="fas fa-user"></i> স্টুডেন্টের নাম</label>
                                 <input type="text" id="name" placeholder="নাম লিখুন" required>
                             </div>
                         </div>
                         <div class="form-col">
                             <div class="form-group">
-                                <label for="phone">ফোন নম্বর</label>
+                                <label for="phone"><i class="fas fa-phone"></i> ফোন নম্বর</label>
                                 <input type="tel" id="phone" placeholder="ফোন নম্বর লিখুন" required>
                             </div>
                         </div>
@@ -290,7 +655,7 @@
                     <div class="form-row">
                         <div class="form-col">
                             <div class="form-group">
-                                <label for="section">সেকশন নির্বাচন করুন</label>
+                                <label for="section"><i class="fas fa-layer-group"></i> সেকশন নির্বাচন করুন</label>
                                 <select id="section" required>
                                     <option value="">সেকশন নির্বাচন করুন</option>
                                     <option value="শনি - সোম - বুধ">শনি - সোম - বুধ</option>
@@ -300,20 +665,26 @@
                         </div>
                         <div class="form-col">
                             <div class="form-group" style="display: flex; align-items: flex-end;">
-                                <button type="submit" class="btn" id="submitBtn">যোগ করুন</button>
+                                <button type="submit" class="btn" id="submitBtn">
+                                    <i class="fas fa-plus"></i> যোগ করুন
+                                </button>
                             </div>
                         </div>
                     </div>
                 </form>
             </div>
             
-            <div class="list-section">
-                <h2>স্টুডেন্ট তালিকা</h2>
-                <div class="search-bar">
-                    <input type="text" id="searchInput" placeholder="স্টুডেন্ট খুঁজুন...">
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-users"></i> স্টুডেন্ট তালিকা</h2>
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="স্টুডেন্ট খুঁজুন...">
+                    </div>
                 </div>
-                <div class="reset-section">
-                    <h3>ক্লাস সংখ্যা রিসেট</h3>
+                
+                <div class="reset-section" style="background: #fff8e1; padding: 15px; border-radius: var(--radius-sm); margin-bottom: 20px; border: 1px solid #ffe0b2;">
+                    <h3><i class="fas fa-redo"></i> ক্লাস সংখ্যা রিসেট</h3>
                     <div class="form-row">
                         <div class="form-col">
                             <div class="form-group">
@@ -325,11 +696,14 @@
                         </div>
                         <div class="form-col">
                             <div class="form-group" style="display: flex; align-items: flex-end;">
-                                <button type="button" class="btn btn-warning" onclick="showResetModal()">ক্লাস সংখ্যা রিসেট করুন</button>
+                                <button type="button" class="btn btn-warning" onclick="showResetModal()">
+                                    <i class="fas fa-sync-alt"></i> ক্লাস সংখ্যা রিসেট করুন
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
+                
                 <div class="table-container">
                     <table class="student-table">
                         <thead>
@@ -348,24 +722,29 @@
                         </tbody>
                     </table>
                 </div>
-                <div id="noData" class="no-data">কোনো স্টুডেন্ট তথ্য পাওয়া যায়নি</div>
+                <div id="noData" class="no-data">
+                    <i class="fas fa-user-slash"></i>
+                    <p>কোনো স্টুডেন্ট তথ্য পাওয়া যায়নি</p>
+                </div>
             </div>
         </div>
         
         <!-- পড়ানোর তথ্য ট্যাব -->
         <div id="attendanceTab" class="tab-content">
-            <div class="form-section">
-                <h2>পড়ানোর তথ্য</h2>
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-calendar-plus"></i> পড়ানোর তথ্য</h2>
+                </div>
                 <div class="form-row">
                     <div class="form-col">
                         <div class="form-group">
-                            <label for="attendanceDate">তারিখ</label>
+                            <label for="attendanceDate"><i class="fas fa-calendar-day"></i> তারিখ</label>
                             <input type="date" id="attendanceDate" class="date-input" required>
                         </div>
                     </div>
                     <div class="form-col">
                         <div class="form-group">
-                            <label for="attendanceSection">সেকশন নির্বাচন করুন</label>
+                            <label for="attendanceSection"><i class="fas fa-layer-group"></i> সেকশন নির্বাচন করুন</label>
                             <select id="attendanceSection" required>
                                 <option value="">সেকশন নির্বাচন করুন</option>
                                 <option value="শনি - সোম - বুধ">শনি - সোম - বুধ</option>
@@ -375,14 +754,18 @@
                     </div>
                     <div class="form-col">
                         <div class="form-group" style="display: flex; align-items: flex-end;">
-                            <button type="button" class="btn" onclick="loadStudentsForAttendance()">লোড করুন</button>
+                            <button type="button" class="btn" onclick="loadStudentsForAttendance()" id="loadAttendanceBtn">
+                                <i class="fas fa-sync"></i> লোড করুন
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <div class="list-section">
-                <h2>পড়ানোর তালিকা</h2>
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-list-check"></i> পড়ানোর তালিকা</h2>
+                </div>
                 <div class="table-container">
                     <table class="student-table">
                         <thead>
@@ -402,21 +785,28 @@
                         </tbody>
                     </table>
                 </div>
-                <div id="noAttendanceData" class="no-data">কোনো স্টুডেন্ট তথ্য পাওয়া যায়নি</div>
-                <div class="form-group" style="margin-top: 20px;">
-                    <button type="button" class="btn btn-success" onclick="saveAttendance()">সেভ করুন</button>
+                <div id="noAttendanceData" class="no-data">
+                    <i class="fas fa-calendar-times"></i>
+                    <p>কোনো স্টুডেন্ট তথ্য পাওয়া যায়নি</p>
+                </div>
+                <div class="form-group" style="margin-top: 20px; text-align: right;">
+                    <button type="button" class="btn btn-success" onclick="saveAttendance()" id="saveAttendanceBtn">
+                        <i class="fas fa-save"></i> সেভ করুন
+                    </button>
                 </div>
             </div>
         </div>
         
         <!-- পূর্বের ইতিহাস ট্যাব -->
         <div id="historyTab" class="tab-content">
-            <div class="form-section">
-                <h2>পূর্বের ইতিহাস</h2>
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-filter"></i> পূর্বের ইতিহাস ফিল্টার</h2>
+                </div>
                 <div class="form-row">
                     <div class="form-col">
                         <div class="form-group">
-                            <label for="historySection">সেকশন নির্বাচন করুন</label>
+                            <label for="historySection"><i class="fas fa-layer-group"></i> সেকশন নির্বাচন করুন</label>
                             <select id="historySection">
                                 <option value="">সব সেকশন</option>
                                 <option value="শনি - সোম - বুধ">শনি - সোম - বুধ</option>
@@ -426,7 +816,7 @@
                     </div>
                     <div class="form-col">
                         <div class="form-group">
-                            <label for="historyStudent">স্টুডেন্ট নির্বাচন করুন</label>
+                            <label for="historyStudent"><i class="fas fa-user-graduate"></i> স্টুডেন্ট নির্বাচন করুন</label>
                             <select id="historyStudent">
                                 <option value="">সব স্টুডেন্ট</option>
                             </select>
@@ -434,14 +824,18 @@
                     </div>
                     <div class="form-col">
                         <div class="form-group" style="display: flex; align-items: flex-end;">
-                            <button type="button" class="btn btn-info" onclick="loadHistory()">লোড করুন</button>
+                            <button type="button" class="btn btn-info" onclick="loadHistory()" id="loadHistoryBtn">
+                                <i class="fas fa-sync"></i> লোড করুন
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <div class="list-section">
-                <h2>ইতিহাস তালিকা</h2>
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-history"></i> ইতিহাস তালিকা</h2>
+                </div>
                 <div class="table-container">
                     <table class="student-table">
                         <thead>
@@ -462,18 +856,23 @@
                         </tbody>
                     </table>
                 </div>
-                <div id="noHistoryData" class="no-data">কোনো ইতিহাস পাওয়া যায়নি</div>
+                <div id="noHistoryData" class="no-data">
+                    <i class="fas fa-history"></i>
+                    <p>কোনো ইতিহাস পাওয়া যায়নি</p>
+                </div>
             </div>
         </div>
         
         <!-- রিপোর্ট ট্যাব -->
         <div id="reportTab" class="tab-content">
-            <div class="report-filter">
-                <h2>রিপোর্ট ফিল্টার</h2>
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-filter"></i> রিপোর্ট ফিল্টার</h2>
+                </div>
                 <div class="form-row">
                     <div class="form-col">
                         <div class="form-group">
-                            <label for="reportSection">সেকশন নির্বাচন করুন</label>
+                            <label for="reportSection"><i class="fas fa-layer-group"></i> সেকশন নির্বাচন করুন</label>
                             <select id="reportSection">
                                 <option value="">সব সেকশন</option>
                                 <option value="শনি - সোম - বুধ">শনি - সোম - বুধ</option>
@@ -483,26 +882,30 @@
                     </div>
                     <div class="form-col">
                         <div class="form-group">
-                            <label for="reportStartDate">শুরু তারিখ</label>
+                            <label for="reportStartDate"><i class="fas fa-calendar"></i> শুরু তারিখ</label>
                             <input type="date" id="reportStartDate" class="date-input">
                         </div>
                     </div>
                     <div class="form-col">
                         <div class="form-group">
-                            <label for="reportEndDate">শেষ তারিখ</label>
+                            <label for="reportEndDate"><i class="fas fa-calendar"></i> শেষ তারিখ</label>
                             <input type="date" id="reportEndDate" class="date-input">
                         </div>
                     </div>
                     <div class="form-col">
                         <div class="form-group" style="display: flex; align-items: flex-end;">
-                            <button type="button" class="btn btn-info" onclick="generateReport()">রিপোর্ট তৈরি করুন</button>
+                            <button type="button" class="btn btn-info" onclick="generateReport()" id="generateReportBtn">
+                                <i class="fas fa-chart-pie"></i> রিপোর্ট তৈরি করুন
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <div class="list-section">
-                <h2>পড়ানোর রিপোর্ট</h2>
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-file-alt"></i> পড়ানোর রিপোর্ট</h2>
+                </div>
                 <div class="table-container">
                     <table class="student-table">
                         <thead>
@@ -522,7 +925,10 @@
                         </tbody>
                     </table>
                 </div>
-                <div id="noReportData" class="no-data">কোনো রিপোর্ট ডাটা পাওয়া যায়নি</div>
+                <div id="noReportData" class="no-data">
+                    <i class="fas fa-file-excel"></i>
+                    <p>কোনো রিপোর্ট ডাটা পাওয়া যায়নি</p>
+                </div>
             </div>
         </div>
     </div>
@@ -530,16 +936,22 @@
     <!-- Reset Modal -->
     <div id="resetModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeResetModal()">&times;</span>
-            <h2>ক্লাস সংখ্যা রিসেট নিশ্চিতকরণ</h2>
+            <div class="modal-header">
+                <h2><i class="fas fa-exclamation-triangle"></i> ক্লাস সংখ্যা রিসেট নিশ্চিতকরণ</h2>
+                <span class="close" onclick="closeResetModal()">&times;</span>
+            </div>
             <p id="resetModalText">আপনি কি নিশ্চিত এই স্টুডেন্টের ক্লাস সংখ্যা রিসেট করতে চান?</p>
             <div class="form-group">
-                <label for="resetReason">রিসেটের কারণ (ঐচ্ছিক)</label>
+                <label for="resetReason"><i class="fas fa-comment"></i> রিসেটের কারণ (ঐচ্ছিক)</label>
                 <input type="text" id="resetReason" placeholder="রিসেটের কারণ লিখুন">
             </div>
             <div class="form-group" style="display: flex; justify-content: flex-end; gap: 10px;">
-                <button type="button" class="btn btn-secondary" onclick="closeResetModal()">বাতিল</button>
-                <button type="button" class="btn btn-danger" onclick="confirmReset()">রিসেট করুন</button>
+                <button type="button" class="btn btn-secondary" onclick="closeResetModal()">
+                    <i class="fas fa-times"></i> বাতিল
+                </button>
+                <button type="button" class="btn btn-danger" onclick="confirmReset()" id="confirmResetBtn">
+                    <i class="fas fa-sync-alt"></i> রিসেট করুন
+                </button>
             </div>
         </div>
     </div>
@@ -547,23 +959,64 @@
     <!-- Edit Date Modal -->
     <div id="editDateModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeEditDateModal()">&times;</span>
-            <h2 id="editDateModalTitle">তারিখ এডিট করুন</h2>
+            <div class="modal-header">
+                <h2 id="editDateModalTitle"><i class="fas fa-calendar-edit"></i> তারিখ এডিট করুন</h2>
+                <span class="close" onclick="closeEditDateModal()">&times;</span>
+            </div>
             <div class="form-group">
-                <label id="editDateLabel">তারিখ</label>
+                <label id="editDateLabel"><i class="fas fa-calendar"></i> তারিখ</label>
                 <input type="date" id="editDateInput" class="date-input">
             </div>
             <input type="hidden" id="editDateType">
             <input type="hidden" id="editDateStudentPhone">
             <input type="hidden" id="editDateOriginalDate">
             <div class="form-group" style="display: flex; justify-content: flex-end; gap: 10px;">
-                <button type="button" class="btn btn-secondary" onclick="closeEditDateModal()">বাতিল</button>
-                <button type="button" class="btn btn-success" onclick="saveEditedDate()">সংরক্ষণ করুন</button>
+                <button type="button" class="btn btn-secondary" onclick="closeEditDateModal()">
+                    <i class="fas fa-times"></i> বাতিল
+                </button>
+                <button type="button" class="btn btn-success" onclick="saveEditedDate()" id="saveDateBtn">
+                    <i class="fas fa-save"></i> সংরক্ষণ করুন
+                </button>
             </div>
         </div>
     </div>
 
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Operation completed successfully</span>
+    </div>
+
     <script>
+        // Toast notification function
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            
+            toast.className = `toast ${type}`;
+            toastMessage.textContent = message;
+            
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Loading state for buttons
+        function setLoading(button, isLoading) {
+            if (isLoading) {
+                button.innerHTML = `<span class="loading"></span> প্রসেসিং...`;
+                button.disabled = true;
+            } else {
+                const icon = button.id.includes('save') ? 'fa-save' : 
+                             button.id.includes('load') ? 'fa-sync' : 
+                             button.id.includes('reset') ? 'fa-sync-alt' : 'fa-check';
+                button.innerHTML = `<i class="fas ${icon}"></i> ${button.textContent.trim()}`;
+                button.disabled = false;
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             // Set today's date as default
             const today = new Date().toISOString().split('T')[0];
@@ -625,9 +1078,15 @@
                         <td>${student.totalClasses || 0}</td>
                         <td>
                             <div class="action-btns">
-                                <button onclick="editStudent(${index})" class="btn btn-secondary">এডিট</button>
-                                <button onclick="deleteStudent(${index})" class="btn btn-danger">ডিলিট</button>
-                                <button onclick="viewStudentDetails('${student.phone}')" class="btn btn-info">বিস্তারিত</button>
+                                <button onclick="editStudent(${index})" class="btn btn-secondary btn-sm">
+                                    <i class="fas fa-edit"></i> এডিট
+                                </button>
+                                <button onclick="deleteStudent(${index})" class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash"></i> ডিলিট
+                                </button>
+                                <button onclick="viewStudentDetails('${student.phone}')" class="btn btn-info btn-sm">
+                                    <i class="fas fa-info-circle"></i> বিস্তারিত
+                                </button>
                             </div>
                         </td>
                     `;
@@ -645,6 +1104,18 @@
                 const phone = document.getElementById('phone').value;
                 const section = document.getElementById('section').value;
                 
+                // Validate phone number
+                if (!/^[0-9]{11}$/.test(phone)) {
+                    showToast('ফোন নম্বরটি অবশ্যই 11 ডিজিটের হতে হবে', 'error');
+                    return;
+                }
+                
+                // Check if phone already exists (for new entries)
+                if (editIndex === null && students.some(s => s.phone === phone)) {
+                    showToast('এই ফোন নম্বরটি ইতিমধ্যে ব্যবহৃত হয়েছে', 'error');
+                    return;
+                }
+                
                 if (editIndex !== null) {
                     // Update existing student
                     students[editIndex] = { 
@@ -654,7 +1125,8 @@
                         section 
                     };
                     editIndex = null;
-                    document.getElementById('submitBtn').textContent = 'যোগ করুন';
+                    document.getElementById('submitBtn').innerHTML = '<i class="fas fa-plus"></i> যোগ করুন';
+                    showToast('স্টুডেন্ট তথ্য সফলভাবে আপডেট করা হয়েছে', 'success');
                 } else {
                     // Add new student
                     students.push({ 
@@ -667,6 +1139,7 @@
                         totalClasses: 0,
                         resetHistory: []
                     });
+                    showToast('নতুন স্টুডেন্ট সফলভাবে যোগ করা হয়েছে', 'success');
                 }
                 
                 // Save to localStorage
@@ -698,7 +1171,7 @@
                 document.getElementById('phone').value = student.phone;
                 document.getElementById('section').value = student.section;
                 editIndex = index;
-                document.getElementById('submitBtn').textContent = 'আপডেট করুন';
+                document.getElementById('submitBtn').innerHTML = '<i class="fas fa-save"></i> আপডেট করুন';
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             };
             
@@ -707,6 +1180,7 @@
                     students.splice(index, 1);
                     localStorage.setItem('students', JSON.stringify(students));
                     renderStudentList();
+                    showToast('স্টুডেন্ট সফলভাবে ডিলিট করা হয়েছে', 'success');
                     
                     // Reset search if active
                     if (searchInput.value) {
@@ -719,7 +1193,7 @@
             window.showResetModal = function() {
                 const studentPhone = document.getElementById('resetStudent').value;
                 if (!studentPhone) {
-                    alert('দয়া করে একটি স্টুডেন্ট নির্বাচন করুন');
+                    showToast('দয়া করে একটি স্টুডেন্ট নির্বাচন করুন', 'error');
                     return;
                 }
                 
@@ -743,156 +1217,198 @@
                     return;
                 }
                 
-                const reason = document.getElementById('resetReason').value;
-                const resetData = {
-                    date: new Date().toISOString().split('T')[0],
-                    previousCount: selectedStudentForReset.currentClasses || 0,
-                    reason: reason || 'কোন কারণ উল্লেখ করা হয়নি'
-                };
+                const confirmBtn = document.getElementById('confirmResetBtn');
+                setLoading(confirmBtn, true);
                 
-                // Add to reset history
-                if (!selectedStudentForReset.resetHistory) {
-                    selectedStudentForReset.resetHistory = [];
-                }
-                selectedStudentForReset.resetHistory.push(resetData);
-                
-                // Reset current classes
-                selectedStudentForReset.currentClasses = 0;
-                
-                // Save to localStorage
-                localStorage.setItem('students', JSON.stringify(students));
-                
-                alert('ক্লাস সংখ্যা সফলভাবে রিসেট করা হয়েছে!');
-                closeResetModal();
-                renderStudentList();
+                setTimeout(() => {
+                    const reason = document.getElementById('resetReason').value;
+                    const resetData = {
+                        date: new Date().toISOString().split('T')[0],
+                        previousCount: selectedStudentForReset.currentClasses || 0,
+                        reason: reason || 'কোন কারণ উল্লেখ করা হয়নি'
+                    };
+                    
+                    // Add to reset history
+                    if (!selectedStudentForReset.resetHistory) {
+                        selectedStudentForReset.resetHistory = [];
+                    }
+                    selectedStudentForReset.resetHistory.push(resetData);
+                    
+                    // Reset current classes
+                    selectedStudentForReset.currentClasses = 0;
+                    
+                    // Save to localStorage
+                    localStorage.setItem('students', JSON.stringify(students));
+                    
+                    showToast('ক্লাস সংখ্যা সফলভাবে রিসেট করা হয়েছে!', 'success');
+                    closeResetModal();
+                    renderStudentList();
+                    setLoading(confirmBtn, false);
+                }, 500);
             };
             
             // Attendance functions
             window.loadStudentsForAttendance = function() {
-                const date = document.getElementById('attendanceDate').value;
-                const section = document.getElementById('attendanceSection').value;
-                if (!section) {
-                    alert('দয়া করে সেকশন নির্বাচন করুন');
-                    return;
-                }
+                const loadBtn = document.getElementById('loadAttendanceBtn');
+                setLoading(loadBtn, true);
                 
-                const filteredStudents = students.filter(student => student.section === section);
-                const attendanceList = document.getElementById('attendanceList');
-                const noAttendanceData = document.getElementById('noAttendanceData');
-                
-                if (filteredStudents.length === 0) {
-                    attendanceList.innerHTML = '';
-                    noAttendanceData.style.display = 'block';
-                    return;
-                }
-                
-                noAttendanceData.style.display = 'none';
-                attendanceList.innerHTML = '';
-                
-                filteredStudents.forEach((student, index) => {
-                    const attendanceData = student.attendance || {};
-                    const paymentData = student.payments || [];
-                    
-                    // Find attendance dates for this student
-                    const attendanceDates = Object.keys(attendanceData).filter(d => d === date);
-                    const paymentDates = paymentData.filter(p => p.date === date).map(p => p.date);
-                    
-                    // Create row for each attendance date
-                    attendanceDates.forEach(attDate => {
-                        const paymentForDate = paymentData.find(p => p.date === attDate);
-                        
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                            <td>${index + 1}</td>
-                            <td>${student.name}</td>
-                            <td>${student.phone}</td>
-                            <td>
-                                ${attDate}
-                                <button class="edit-date-btn" onclick="showEditDateModal('${student.phone}', 'attendance', '${attDate}')">এডিট</button>
-                            </td>
-                            <td><input type="checkbox" class="attendance-checkbox" data-id="${student.phone}" data-date="${attDate}" checked></td>
-                            <td>
-                                ${paymentForDate ? paymentForDate.date : 'নেই'}
-                                ${paymentForDate ? `<button class="edit-date-btn" onclick="showEditDateModal('${student.phone}', 'payment', '${paymentForDate.date}')">এডিট</button>` : ''}
-                            </td>
-                            <td><input type="checkbox" class="payment-checkbox" data-id="${student.phone}" data-date="${attDate}" ${paymentForDate ? 'checked' : ''}></td>
-                            <td>
-                                <button onclick="removeAttendance('${student.phone}', '${attDate}')" class="btn btn-danger">মুছুন</button>
-                            </td>
-                        `;
-                        attendanceList.appendChild(row);
-                    });
-                    
-                    // Add empty row if no attendance for selected date
-                    if (attendanceDates.length === 0) {
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                            <td>${index + 1}</td>
-                            <td>${student.name}</td>
-                            <td>${student.phone}</td>
-                            <td>${date}</td>
-                            <td><input type="checkbox" class="attendance-checkbox" data-id="${student.phone}" data-date="${date}"></td>
-                            <td>নেই</td>
-                            <td><input type="checkbox" class="payment-checkbox" data-id="${student.phone}" data-date="${date}"></td>
-                            <td></td>
-                        `;
-                        attendanceList.appendChild(row);
+                setTimeout(() => {
+                    const date = document.getElementById('attendanceDate').value;
+                    const section = document.getElementById('attendanceSection').value;
+                    if (!section) {
+                        showToast('দয়া করে সেকশন নির্বাচন করুন', 'error');
+                        setLoading(loadBtn, false);
+                        return;
                     }
-                });
+                    
+                    const filteredStudents = students.filter(student => student.section === section);
+                    const attendanceList = document.getElementById('attendanceList');
+                    const noAttendanceData = document.getElementById('noAttendanceData');
+                    
+                    if (filteredStudents.length === 0) {
+                        attendanceList.innerHTML = '';
+                        noAttendanceData.style.display = 'block';
+                        setLoading(loadBtn, false);
+                        return;
+                    }
+                    
+                    noAttendanceData.style.display = 'none';
+                    attendanceList.innerHTML = '';
+                    
+                    filteredStudents.forEach((student, index) => {
+                        const attendanceData = student.attendance || {};
+                        const paymentData = student.payments || [];
+                        
+                        // Find attendance dates for this student
+                        const attendanceDates = Object.keys(attendanceData).filter(d => d === date);
+                        const paymentDates = paymentData.filter(p => p.date === date).map(p => p.date);
+                        
+                        // Create row for each attendance date
+                        attendanceDates.forEach(attDate => {
+                            const paymentForDate = paymentData.find(p => p.date === attDate);
+                            
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${index + 1}</td>
+                                <td>${student.name}</td>
+                                <td>${student.phone}</td>
+                                <td>
+                                    ${attDate}
+                                    <button class="edit-date-btn" onclick="showEditDateModal('${student.phone}', 'attendance', '${attDate}')">এডিট</button>
+                                </td>
+                                <td>
+                                    <label class="checkbox-container">
+                                        <input type="checkbox" class="attendance-checkbox" data-id="${student.phone}" data-date="${attDate}" checked>
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    ${paymentForDate ? paymentForDate.date : 'নেই'}
+                                    ${paymentForDate ? `<button class="edit-date-btn" onclick="showEditDateModal('${student.phone}', 'payment', '${paymentForDate.date}')">এডিট</button>` : ''}
+                                </td>
+                                <td>
+                                    <label class="checkbox-container">
+                                        <input type="checkbox" class="payment-checkbox" data-id="${student.phone}" data-date="${attDate}" ${paymentForDate ? 'checked' : ''}>
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <button onclick="removeAttendance('${student.phone}', '${attDate}')" class="btn btn-danger btn-sm">
+                                        <i class="fas fa-trash"></i> মুছুন
+                                    </button>
+                                </td>
+                            `;
+                            attendanceList.appendChild(row);
+                        });
+                        
+                        // Add empty row if no attendance for selected date
+                        if (attendanceDates.length === 0) {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${index + 1}</td>
+                                <td>${student.name}</td>
+                                <td>${student.phone}</td>
+                                <td>${date}</td>
+                                <td>
+                                    <label class="checkbox-container">
+                                        <input type="checkbox" class="attendance-checkbox" data-id="${student.phone}" data-date="${date}">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </td>
+                                <td>নেই</td>
+                                <td>
+                                    <label class="checkbox-container">
+                                        <input type="checkbox" class="payment-checkbox" data-id="${student.phone}" data-date="${date}">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </td>
+                                <td></td>
+                            `;
+                            attendanceList.appendChild(row);
+                        }
+                    });
+                    setLoading(loadBtn, false);
+                }, 500);
             };
             
             window.saveAttendance = function() {
-                const selectedDate = document.getElementById('attendanceDate').value;
-                const checkboxes = document.querySelectorAll('.attendance-checkbox');
-                const paymentCheckboxes = document.querySelectorAll('.payment-checkbox');
+                const saveBtn = document.getElementById('saveAttendanceBtn');
+                setLoading(saveBtn, true);
                 
-                checkboxes.forEach((checkbox, index) => {
-                    const phone = checkbox.getAttribute('data-id');
-                    const date = checkbox.getAttribute('data-date') || selectedDate;
-                    const student = students.find(s => s.phone === phone);
+                setTimeout(() => {
+                    const selectedDate = document.getElementById('attendanceDate').value;
+                    const checkboxes = document.querySelectorAll('.attendance-checkbox');
+                    const paymentCheckboxes = document.querySelectorAll('.payment-checkbox');
                     
-                    if (student) {
-                        // Update attendance
-                        if (!student.attendance) student.attendance = {};
+                    checkboxes.forEach((checkbox, index) => {
+                        const phone = checkbox.getAttribute('data-id');
+                        const date = checkbox.getAttribute('data-date') || selectedDate;
+                        const student = students.find(s => s.phone === phone);
                         
-                        if (checkbox.checked) {
-                            // Add or update attendance
-                            if (!student.attendance[date]) {
-                                // New attendance
-                                student.attendance[date] = true;
-                                student.currentClasses = (student.currentClasses || 0) + 1;
-                                student.totalClasses = (student.totalClasses || 0) + 1;
+                        if (student) {
+                            // Update attendance
+                            if (!student.attendance) student.attendance = {};
+                            
+                            if (checkbox.checked) {
+                                // Add or update attendance
+                                if (!student.attendance[date]) {
+                                    // New attendance
+                                    student.attendance[date] = true;
+                                    student.currentClasses = (student.currentClasses || 0) + 1;
+                                    student.totalClasses = (student.totalClasses || 0) + 1;
+                                }
+                            } else {
+                                // Remove attendance
+                                if (student.attendance[date]) {
+                                    delete student.attendance[date];
+                                    student.currentClasses = Math.max((student.currentClasses || 0) - 1, 0);
+                                    student.totalClasses = Math.max((student.totalClasses || 0) - 1, 0);
+                                }
                             }
-                        } else {
-                            // Remove attendance
-                            if (student.attendance[date]) {
-                                delete student.attendance[date];
-                                student.currentClasses = Math.max((student.currentClasses || 0) - 1, 0);
-                                student.totalClasses = Math.max((student.totalClasses || 0) - 1, 0);
+                            
+                            // Update payment
+                            const paymentChecked = paymentCheckboxes[index]?.checked;
+                            
+                            if (!student.payments) student.payments = [];
+                            
+                            // Remove existing payment for this date if unchecked
+                            student.payments = student.payments.filter(p => p.date !== date);
+                            
+                            if (paymentChecked) {
+                                student.payments.push({
+                                    date: date,
+                                    amount: 0
+                                });
                             }
                         }
-                        
-                        // Update payment
-                        const paymentChecked = paymentCheckboxes[index]?.checked;
-                        
-                        if (!student.payments) student.payments = [];
-                        
-                        // Remove existing payment for this date if unchecked
-                        student.payments = student.payments.filter(p => p.date !== date);
-                        
-                        if (paymentChecked) {
-                            student.payments.push({
-                                date: date,
-                                amount: 0
-                            });
-                        }
-                    }
-                });
-                
-                // Save to localStorage
-                localStorage.setItem('students', JSON.stringify(students));
-                alert('তথ্য সফলভাবে সংরক্ষণ করা হয়েছে!');
-                loadStudentsForAttendance(); // Refresh the view
+                    });
+                    
+                    // Save to localStorage
+                    localStorage.setItem('students', JSON.stringify(students));
+                    showToast('তথ্য সফলভাবে সংরক্ষণ করা হয়েছে!', 'success');
+                    loadStudentsForAttendance(); // Refresh the view
+                    setLoading(saveBtn, false);
+                }, 500);
             };
             
             window.removeAttendance = function(phone, date) {
@@ -913,6 +1429,7 @@
                         
                         // Save to localStorage
                         localStorage.setItem('students', JSON.stringify(students));
+                        showToast('পড়ানোর তথ্য সফলভাবে মুছে ফেলা হয়েছে', 'success');
                         loadStudentsForAttendance(); // Refresh the view
                     }
                 }
@@ -941,159 +1458,180 @@
             };
             
             window.saveEditedDate = function() {
-                const phone = document.getElementById('editDateStudentPhone').value;
-                const type = document.getElementById('editDateType').value;
-                const originalDate = document.getElementById('editDateOriginalDate').value;
-                const newDate = document.getElementById('editDateInput').value;
+                const saveBtn = document.getElementById('saveDateBtn');
+                setLoading(saveBtn, true);
                 
-                if (!newDate) {
-                    alert('দয়া করে একটি তারিখ নির্বাচন করুন');
-                    return;
-                }
-                
-                const student = students.find(s => s.phone === phone);
-                if (student) {
-                    if (type === 'attendance') {
-                        // Edit attendance date
-                        if (student.attendance && student.attendance[originalDate]) {
-                            student.attendance[newDate] = true;
-                            delete student.attendance[originalDate];
-                        }
-                    } else {
-                        // Edit payment date
-                        if (student.payments) {
-                            const paymentIndex = student.payments.findIndex(p => p.date === originalDate);
-                            if (paymentIndex !== -1) {
-                                student.payments[paymentIndex].date = newDate;
+                setTimeout(() => {
+                    const phone = document.getElementById('editDateStudentPhone').value;
+                    const type = document.getElementById('editDateType').value;
+                    const originalDate = document.getElementById('editDateOriginalDate').value;
+                    const newDate = document.getElementById('editDateInput').value;
+                    
+                    if (!newDate) {
+                        showToast('দয়া করে একটি তারিখ নির্বাচন করুন', 'error');
+                        setLoading(saveBtn, false);
+                        return;
+                    }
+                    
+                    const student = students.find(s => s.phone === phone);
+                    if (student) {
+                        if (type === 'attendance') {
+                            // Edit attendance date
+                            if (student.attendance && student.attendance[originalDate]) {
+                                student.attendance[newDate] = true;
+                                delete student.attendance[originalDate];
+                            }
+                        } else {
+                            // Edit payment date
+                            if (student.payments) {
+                                const paymentIndex = student.payments.findIndex(p => p.date === originalDate);
+                                if (paymentIndex !== -1) {
+                                    student.payments[paymentIndex].date = newDate;
+                                }
                             }
                         }
+                        
+                        // Save to localStorage
+                        localStorage.setItem('students', JSON.stringify(students));
+                        showToast('তারিখ সফলভাবে আপডেট করা হয়েছে!', 'success');
+                        closeEditDateModal();
+                        
+                        // Refresh current view
+                        if (document.getElementById('attendanceTab').classList.contains('active')) {
+                            loadStudentsForAttendance();
+                        } else if (document.getElementById('historyTab').classList.contains('active')) {
+                            loadHistory();
+                        }
                     }
-                    
-                    // Save to localStorage
-                    localStorage.setItem('students', JSON.stringify(students));
-                    alert('তারিখ সফলভাবে আপডেট করা হয়েছে!');
-                    closeEditDateModal();
-                    
-                    // Refresh current view
-                    if (document.getElementById('attendanceTab').classList.contains('active')) {
-                        loadStudentsForAttendance();
-                    } else if (document.getElementById('historyTab').classList.contains('active')) {
-                        loadHistory();
-                    }
-                }
+                    setLoading(saveBtn, false);
+                }, 500);
             };
             
             // History functions
             window.loadHistory = function() {
-                const section = document.getElementById('historySection').value;
-                const studentPhone = document.getElementById('historyStudent').value;
+                const loadBtn = document.getElementById('loadHistoryBtn');
+                setLoading(loadBtn, true);
                 
-                let filteredStudents = students;
-                
-                // Filter by section
-                if (section) {
-                    filteredStudents = filteredStudents.filter(student => student.section === section);
-                }
-                
-                // Filter by student
-                if (studentPhone) {
-                    filteredStudents = filteredStudents.filter(student => student.phone === studentPhone);
-                }
-                
-                const historyList = document.getElementById('historyList');
-                const noHistoryData = document.getElementById('noHistoryData');
-                
-                if (filteredStudents.length === 0) {
+                setTimeout(() => {
+                    const section = document.getElementById('historySection').value;
+                    const studentPhone = document.getElementById('historyStudent').value;
+                    
+                    let filteredStudents = students;
+                    
+                    // Filter by section
+                    if (section) {
+                        filteredStudents = filteredStudents.filter(student => student.section === section);
+                    }
+                    
+                    // Filter by student
+                    if (studentPhone) {
+                        filteredStudents = filteredStudents.filter(student => student.phone === studentPhone);
+                    }
+                    
+                    const historyList = document.getElementById('historyList');
+                    const noHistoryData = document.getElementById('noHistoryData');
+                    
+                    if (filteredStudents.length === 0) {
+                        historyList.innerHTML = '';
+                        noHistoryData.style.display = 'block';
+                        setLoading(loadBtn, false);
+                        return;
+                    }
+                    
+                    noHistoryData.style.display = 'none';
                     historyList.innerHTML = '';
-                    noHistoryData.style.display = 'block';
-                    return;
-                }
-                
-                noHistoryData.style.display = 'none';
-                historyList.innerHTML = '';
-                
-                let allHistory = [];
-                
-                // Collect all history data
-                filteredStudents.forEach(student => {
-                    // Attendance history
-                    if (student.attendance) {
-                        Object.keys(student.attendance).forEach(date => {
-                            const payment = student.payments?.find(p => p.date === date);
-                            allHistory.push({
-                                date,
-                                name: student.name,
-                                phone: student.phone,
-                                section: student.section,
-                                attended: true,
-                                paid: !!payment,
-                                isReset: false
+                    
+                    let allHistory = [];
+                    
+                    // Collect all history data
+                    filteredStudents.forEach(student => {
+                        // Attendance history
+                        if (student.attendance) {
+                            Object.keys(student.attendance).forEach(date => {
+                                const payment = student.payments?.find(p => p.date === date);
+                                allHistory.push({
+                                    date,
+                                    name: student.name,
+                                    phone: student.phone,
+                                    section: student.section,
+                                    attended: true,
+                                    paid: !!payment,
+                                    isReset: false
+                                });
                             });
-                        });
-                    }
-                    
-                    // Reset history
-                    if (student.resetHistory) {
-                        student.resetHistory.forEach(reset => {
-                            allHistory.push({
-                                date: reset.date,
-                                name: student.name,
-                                phone: student.phone,
-                                section: student.section,
-                                attended: false,
-                                paid: false,
-                                isReset: true,
-                                resetData: reset
+                        }
+                        
+                        // Reset history
+                        if (student.resetHistory) {
+                            student.resetHistory.forEach(reset => {
+                                allHistory.push({
+                                    date: reset.date,
+                                    name: student.name,
+                                    phone: student.phone,
+                                    section: student.section,
+                                    attended: false,
+                                    paid: false,
+                                    isReset: true,
+                                    resetData: reset
+                                });
                             });
-                        });
-                    }
-                });
-                
-                // Sort by date (newest first)
-                allHistory.sort((a, b) => new Date(b.date) - new Date(a.date));
-                
-                if (allHistory.length === 0) {
-                    historyList.innerHTML = '';
-                    noHistoryData.style.display = 'block';
-                    return;
-                }
-                
-                // Display history
-                allHistory.forEach((item, index) => {
-                    const row = document.createElement('tr');
+                        }
+                    });
                     
-                    if (item.isReset) {
-                        row.innerHTML = `
-                            <td>${index + 1}</td>
-                            <td>${item.date}</td>
-                            <td>${item.name}</td>
-                            <td>${item.phone}</td>
-                            <td>${item.section}</td>
-                            <td>না</td>
-                            <td>না</td>
-                            <td>হ্যাঁ (পূর্ববর্তী: ${item.resetData.previousCount}, কারণ: ${item.resetData.reason})</td>
-                            <td></td>
-                        `;
-                        row.style.backgroundColor = '#fff3e0';
-                    } else {
-                        row.innerHTML = `
-                            <td>${index + 1}</td>
-                            <td>${item.date}</td>
-                            <td>${item.name}</td>
-                            <td>${item.phone}</td>
-                            <td>${item.section}</td>
-                            <td>হ্যাঁ</td>
-                            <td>${item.paid ? 'হ্যাঁ' : 'না'}</td>
-                            <td>না</td>
-                            <td>
-                                <button onclick="removeHistoryItem('${item.phone}', '${item.date}')" class="btn btn-danger">মুছুন</button>
-                                ${item.paid ? `<button class="btn btn-secondary" onclick="showEditDateModal('${item.phone}', 'payment', '${item.date}')">বেতনের তারিখ এডিট</button>` : ''}
-                            </td>
-                        `;
+                    // Sort by date (newest first)
+                    allHistory.sort((a, b) => new Date(b.date) - new Date(a.date));
+                    
+                    if (allHistory.length === 0) {
+                        historyList.innerHTML = '';
+                        noHistoryData.style.display = 'block';
+                        setLoading(loadBtn, false);
+                        return;
                     }
                     
-                    historyList.appendChild(row);
-                });
+                    // Display history
+                    allHistory.forEach((item, index) => {
+                        const row = document.createElement('tr');
+                        
+                        if (item.isReset) {
+                            row.innerHTML = `
+                                <td>${index + 1}</td>
+                                <td>${item.date}</td>
+                                <td>${item.name}</td>
+                                <td>${item.phone}</td>
+                                <td>${item.section}</td>
+                                <td><span class="badge badge-danger">না</span></td>
+                                <td><span class="badge badge-danger">না</span></td>
+                                <td><span class="badge badge-success">হ্যাঁ</span> (পূর্ববর্তী: ${item.resetData.previousCount}, কারণ: ${item.resetData.reason})</td>
+                                <td></td>
+                            `;
+                            row.style.backgroundColor = '#fff3e0';
+                        } else {
+                            row.innerHTML = `
+                                <td>${index + 1}</td>
+                                <td>${item.date}</td>
+                                <td>${item.name}</td>
+                                <td>${item.phone}</td>
+                                <td>${item.section}</td>
+                                <td><span class="badge badge-success">হ্যাঁ</span></td>
+                                <td><span class="badge ${item.paid ? 'badge-success' : 'badge-danger'}">${item.paid ? 'হ্যাঁ' : 'না'}</span></td>
+                                <td><span class="badge badge-danger">না</span></td>
+                                <td>
+                                    <div class="action-btns">
+                                        <button onclick="removeHistoryItem('${item.phone}', '${item.date}')" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-trash"></i> মুছুন
+                                        </button>
+                                        ${item.paid ? `<button class="btn btn-secondary btn-sm" onclick="showEditDateModal('${item.phone}', 'payment', '${item.date}')">
+                                            <i class="fas fa-edit"></i> বেতনের তারিখ এডিট
+                                        </button>` : ''}
+                                    </div>
+                                </td>
+                            `;
+                        }
+                        
+                        historyList.appendChild(row);
+                    });
+                    setLoading(loadBtn, false);
+                }, 500);
             };
             
             window.removeHistoryItem = function(phone, date) {
@@ -1114,6 +1652,7 @@
                         
                         // Save to localStorage
                         localStorage.setItem('students', JSON.stringify(students));
+                        showToast('ইতিহাস সফলভাবে মুছে ফেলা হয়েছে', 'success');
                         loadHistory(); // Refresh the view
                     }
                 }
@@ -1155,75 +1694,86 @@
             };
             
             window.generateReport = function() {
-                const section = document.getElementById('reportSection').value;
-                const startDate = document.getElementById('reportStartDate').value;
-                const endDate = document.getElementById('reportEndDate').value;
+                const generateBtn = document.getElementById('generateReportBtn');
+                setLoading(generateBtn, true);
                 
-                let filteredStudents = students;
-                
-                // Filter by section
-                if (section) {
-                    filteredStudents = filteredStudents.filter(student => student.section === section);
-                }
-                
-                const reportList = document.getElementById('reportList');
-                const noReportData = document.getElementById('noReportData');
-                
-                if (filteredStudents.length === 0) {
-                    reportList.innerHTML = '';
-                    noReportData.style.display = 'block';
-                    return;
-                }
-                
-                noReportData.style.display = 'none';
-                reportList.innerHTML = '';
-                
-                let rowIndex = 1;
-                
-                filteredStudents.forEach(student => {
-                    // Add student info row
-                    const studentRow = document.createElement('tr');
-                    studentRow.innerHTML = `
-                        <td>${rowIndex++}</td>
-                        <td>${student.name}</td>
-                        <td>${student.phone}</td>
-                        <td>${student.section}</td>
-                        <td>${student.currentClasses || 0}</td>
-                        <td>${student.totalClasses || 0}</td>
-                        <td colspan="2">
-                            <button onclick="viewStudentDetails('${student.phone}')" class="btn btn-info">সম্পূর্ণ বিস্তারিত দেখুন</button>
-                        </td>
-                    `;
-                    reportList.appendChild(studentRow);
+                setTimeout(() => {
+                    const section = document.getElementById('reportSection').value;
+                    const startDate = document.getElementById('reportStartDate').value;
+                    const endDate = document.getElementById('reportEndDate').value;
                     
-                    // Add attendance and payment details
-                    if (student.attendance) {
-                        const sortedDates = Object.keys(student.attendance).sort();
-                        
-                        sortedDates.forEach(date => {
-                            // Check date range filter
-                            if ((startDate && date < startDate) || (endDate && date > endDate)) {
-                                return;
-                            }
-                            
-                            // Check if payment exists for this date
-                            const payment = student.payments?.find(p => p.date === date);
-                            
-                            const detailRow = document.createElement('tr');
-                            detailRow.innerHTML = `
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>${date}</td>
-                                <td>${payment ? payment.date : 'নেই'}</td>
-                            `;
-                            reportList.appendChild(detailRow);
-                        });
+                    let filteredStudents = students;
+                    
+                    // Filter by section
+                    if (section) {
+                        filteredStudents = filteredStudents.filter(student => student.section === section);
                     }
-                });
+                    
+                    const reportList = document.getElementById('reportList');
+                    const noReportData = document.getElementById('noReportData');
+                    
+                    if (filteredStudents.length === 0) {
+                        reportList.innerHTML = '';
+                        noReportData.style.display = 'block';
+                        setLoading(generateBtn, false);
+                        return;
+                    }
+                    
+                    noReportData.style.display = 'none';
+                    reportList.innerHTML = '';
+                    
+                    let rowIndex = 1;
+                    
+                    filteredStudents.forEach(student => {
+                        // Add student info row
+                        const studentRow = document.createElement('tr');
+                        studentRow.style.backgroundColor = '#f8f9fa';
+                        studentRow.innerHTML = `
+                            <td>${rowIndex++}</td>
+                            <td><strong>${student.name}</strong></td>
+                            <td>${student.phone}</td>
+                            <td>${student.section}</td>
+                            <td>${student.currentClasses || 0}</td>
+                            <td>${student.totalClasses || 0}</td>
+                            <td colspan="2">
+                                <button onclick="viewStudentDetails('${student.phone}')" class="btn btn-info btn-sm">
+                                    <i class="fas fa-info-circle"></i> সম্পূর্ণ বিস্তারিত দেখুন
+                                </button>
+                            </td>
+                        `;
+                        reportList.appendChild(studentRow);
+                        
+                        // Add attendance and payment details
+                        if (student.attendance) {
+                            const sortedDates = Object.keys(student.attendance).sort();
+                            
+                            sortedDates.forEach(date => {
+                                // Check date range filter
+                                if ((startDate && date < startDate) || (endDate && date > endDate)) {
+                                    return;
+                                }
+                                
+                                // Check if payment exists for this date
+                                const payment = student.payments?.find(p => p.date === date);
+                                
+                                const detailRow = document.createElement('tr');
+                                detailRow.innerHTML = `
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>${date}</td>
+                                    <td>${payment ? payment.date : 'নেই'}</td>
+                                `;
+                                reportList.appendChild(detailRow);
+                            });
+                        }
+                    });
+                    showToast('রিপোর্ট সফলভাবে তৈরি করা হয়েছে', 'success');
+                    setLoading(generateBtn, false);
+                }, 500);
             };
             
             window.switchTab = function(tabId) {
