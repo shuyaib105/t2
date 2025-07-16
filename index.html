@@ -566,6 +566,65 @@
             color: var(--primary-dark);
         }
 
+        /* Calendar View */
+        .calendar-view {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .calendar-day {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 15px;
+        }
+
+        .calendar-day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .calendar-day-title {
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .calendar-day-date {
+            font-size: 14px;
+            color: var(--gray);
+        }
+
+        .calendar-student-list {
+            list-style: none;
+        }
+
+        .calendar-student-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px dashed var(--gray-light);
+        }
+
+        .calendar-student-item:last-child {
+            border-bottom: none;
+        }
+
+        .calendar-student-name {
+            flex: 1;
+        }
+
+        .calendar-student-status {
+            display: flex;
+            gap: 10px;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .form-col {
@@ -605,6 +664,10 @@
                 padding: 10px 5px;
                 font-size: 14px;
             }
+            
+            .calendar-view {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -612,7 +675,7 @@
     <div class="container">
         <div class="header">
             <h1>স্টুডেন্ট ম্যানেজমেন্ট সিস্টেম</h1>
-            <h4>APP VERSION : 0.02</h4>
+            <h4>APP VERSION : 0.03</h4>
         </div>
         
         <div class="tabs">
@@ -621,6 +684,9 @@
             </div>
             <div class="tab" onclick="switchTab('attendanceTab')">
                 <i class="fas fa-calendar-check"></i> পড়ানোর তথ্য
+            </div>
+            <div class="tab" onclick="switchTab('calendarTab')">
+                <i class="fas fa-calendar-alt"></i> ক্যালেন্ডার ভিউ
             </div>
             <div class="tab" onclick="switchTab('historyTab')">
                 <i class="fas fa-history"></i> পূর্বের ইতিহাস
@@ -661,6 +727,21 @@
                                     <option value="শনি - সোম - বুধ">শনি - সোম - বুধ</option>
                                     <option value="রবি - মঙ্গল - বৃহস্পতি">রবি - মঙ্গল - বৃহস্পতি</option>
                                 </select>
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="feeAmount"><i class="fas fa-money-bill-wave"></i> মাসিক বেতন (টাকায়)</label>
+                                <input type="number" id="feeAmount" placeholder="বেতনের পরিমাণ" value="1000">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="joiningDate"><i class="fas fa-calendar-day"></i> যোগদানের তারিখ</label>
+                                <input type="date" id="joiningDate">
                             </div>
                         </div>
                         <div class="form-col">
@@ -714,6 +795,7 @@
                                 <th>সেকশন</th>
                                 <th>বর্তমান ক্লাস</th>
                                 <th>মোট ক্লাস</th>
+                                <th>বেতন</th>
                                 <th>কার্যক্রম</th>
                             </tr>
                         </thead>
@@ -797,6 +879,53 @@
             </div>
         </div>
         
+        <!-- ক্যালেন্ডার ভিউ ট্যাব -->
+        <div id="calendarTab" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-filter"></i> ক্যালেন্ডার ফিল্টার</h2>
+                </div>
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="calendarMonth"><i class="fas fa-calendar"></i> মাস নির্বাচন করুন</label>
+                            <input type="month" id="calendarMonth" required>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="calendarSection"><i class="fas fa-layer-group"></i> সেকশন নির্বাচন করুন</label>
+                            <select id="calendarSection">
+                                <option value="">সব সেকশন</option>
+                                <option value="শনি - সোম - বুধ">শনি - সোম - বুধ</option>
+                                <option value="রবি - মঙ্গল - বৃহস্পতি">রবি - মঙ্গল - বৃহস্পতি</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group" style="display: flex; align-items: flex-end;">
+                            <button type="button" class="btn btn-info" onclick="loadCalendarView()" id="loadCalendarBtn">
+                                <i class="fas fa-sync"></i> লোড করুন
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-calendar-alt"></i> ক্যালেন্ডার ভিউ</h2>
+                </div>
+                <div id="calendarView" class="calendar-view">
+                    <!-- Calendar data will appear here -->
+                </div>
+                <div id="noCalendarData" class="no-data">
+                    <i class="fas fa-calendar-times"></i>
+                    <p>কোনো পড়ানোর তথ্য পাওয়া যায়নি</p>
+                </div>
+            </div>
+        </div>
+        
         <!-- পূর্বের ইতিহাস ট্যাব -->
         <div id="historyTab" class="tab-content">
             <div class="card">
@@ -820,6 +949,12 @@
                             <select id="historyStudent">
                                 <option value="">সব স্টুডেন্ট</option>
                             </select>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="historyMonth"><i class="fas fa-calendar"></i> মাস নির্বাচন করুন</label>
+                            <input type="month" id="historyMonth">
                         </div>
                     </div>
                     <div class="form-col">
@@ -905,9 +1040,12 @@
             <div class="card">
                 <div class="card-header">
                     <h2><i class="fas fa-file-alt"></i> পড়ানোর রিপোর্ট</h2>
+                    <button type="button" class="btn btn-success" onclick="exportToExcel()" id="exportExcelBtn">
+                        <i class="fas fa-file-excel"></i> এক্সেলে রপ্তানি করুন
+                    </button>
                 </div>
                 <div class="table-container">
-                    <table class="student-table">
+                    <table class="student-table" id="reportTable">
                         <thead>
                             <tr>
                                 <th>ক্রমিক নং</th>
@@ -918,6 +1056,7 @@
                                 <th>মোট ক্লাস</th>
                                 <th>পড়ানোর তারিখ</th>
                                 <th>বেতনের তারিখ</th>
+                                <th>বেতনের পরিমাণ</th>
                             </tr>
                         </thead>
                         <tbody id="reportList">
@@ -981,6 +1120,34 @@
         </div>
     </div>
 
+    <!-- Payment Modal -->
+    <div id="paymentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-money-bill-wave"></i> বেতন তথ্য</h2>
+                <span class="close" onclick="closePaymentModal()">&times;</span>
+            </div>
+            <div class="form-group">
+                <label for="paymentDate"><i class="fas fa-calendar"></i> তারিখ</label>
+                <input type="date" id="paymentDate">
+            </div>
+            <div class="form-group">
+                <label for="paymentAmount"><i class="fas fa-money-bill-alt"></i> পরিমাণ (টাকায়)</label>
+                <input type="number" id="paymentAmount" placeholder="বেতনের পরিমাণ লিখুন">
+            </div>
+            <input type="hidden" id="paymentStudentPhone">
+            <input type="hidden" id="paymentOriginalDate">
+            <div class="form-group" style="display: flex; justify-content: flex-end; gap: 10px;">
+                <button type="button" class="btn btn-secondary" onclick="closePaymentModal()">
+                    <i class="fas fa-times"></i> বাতিল
+                </button>
+                <button type="button" class="btn btn-success" onclick="savePayment()" id="savePaymentBtn">
+                    <i class="fas fa-save"></i> সংরক্ষণ করুন
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Toast Notification -->
     <div id="toast" class="toast">
         <i class="fas fa-check-circle"></i>
@@ -1017,10 +1184,29 @@
             }
         }
 
+        // Export to Excel
+        function exportToExcel() {
+            const table = document.getElementById('reportTable');
+            const html = table.outerHTML;
+            const blob = new Blob([html], {type: 'application/vnd.ms-excel'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'student_report.xls';
+            a.click();
+            showToast('রিপোর্ট এক্সেল ফাইল হিসেবে ডাউনলোড হয়েছে', 'success');
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             // Set today's date as default
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('attendanceDate').value = today;
+            document.getElementById('joiningDate').value = today;
+            
+            // Set current month for calendar and history
+            const currentMonth = new Date().toISOString().slice(0, 7);
+            document.getElementById('calendarMonth').value = currentMonth;
+            document.getElementById('historyMonth').value = currentMonth;
             
             // Initialize student data
             const studentForm = document.getElementById('studentForm');
@@ -1076,6 +1262,7 @@
                         <td>${student.section}</td>
                         <td>${student.currentClasses || 0}</td>
                         <td>${student.totalClasses || 0}</td>
+                        <td>${student.feeAmount || '1000'} টাকা</td>
                         <td>
                             <div class="action-btns">
                                 <button onclick="editStudent(${index})" class="btn btn-secondary btn-sm">
@@ -1103,6 +1290,8 @@
                 const name = document.getElementById('name').value;
                 const phone = document.getElementById('phone').value;
                 const section = document.getElementById('section').value;
+                const feeAmount = document.getElementById('feeAmount').value || 1000;
+                const joiningDate = document.getElementById('joiningDate').value || new Date().toISOString().split('T')[0];
                 
                 // Validate phone number
                 if (!/^[0-9]{11}$/.test(phone)) {
@@ -1122,7 +1311,9 @@
                         ...students[editIndex],
                         name, 
                         phone, 
-                        section 
+                        section,
+                        feeAmount,
+                        joiningDate
                     };
                     editIndex = null;
                     document.getElementById('submitBtn').innerHTML = '<i class="fas fa-plus"></i> যোগ করুন';
@@ -1133,6 +1324,8 @@
                         name, 
                         phone, 
                         section,
+                        feeAmount,
+                        joiningDate,
                         attendance: {},
                         payments: [],
                         currentClasses: 0,
@@ -1147,6 +1340,8 @@
                 
                 // Reset form and render list
                 studentForm.reset();
+                document.getElementById('joiningDate').value = new Date().toISOString().split('T')[0];
+                document.getElementById('feeAmount').value = 1000;
                 renderStudentList();
             });
             
@@ -1170,6 +1365,8 @@
                 document.getElementById('name').value = student.name;
                 document.getElementById('phone').value = student.phone;
                 document.getElementById('section').value = student.section;
+                document.getElementById('feeAmount').value = student.feeAmount || 1000;
+                document.getElementById('joiningDate').value = student.joiningDate || new Date().toISOString().split('T')[0];
                 editIndex = index;
                 document.getElementById('submitBtn').innerHTML = '<i class="fas fa-save"></i> আপডেট করুন';
                 window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1316,6 +1513,9 @@
                                     <button onclick="removeAttendance('${student.phone}', '${attDate}')" class="btn btn-danger btn-sm">
                                         <i class="fas fa-trash"></i> মুছুন
                                     </button>
+                                    ${paymentForDate ? `<button class="btn btn-warning btn-sm" onclick="showPaymentModal('${student.phone}', '${paymentForDate.date}', ${paymentForDate.amount || 0})">
+                                        <i class="fas fa-money-bill-wave"></i> বেতন এডিট
+                                    </button>` : ''}
                                 </td>
                             `;
                             attendanceList.appendChild(row);
@@ -1397,7 +1597,7 @@
                             if (paymentChecked) {
                                 student.payments.push({
                                     date: date,
-                                    amount: 0
+                                    amount: student.feeAmount || 1000
                                 });
                             }
                         }
@@ -1433,6 +1633,64 @@
                         loadStudentsForAttendance(); // Refresh the view
                     }
                 }
+            };
+            
+            // Payment functions
+            window.showPaymentModal = function(phone, date, amount) {
+                document.getElementById('paymentStudentPhone').value = phone;
+                document.getElementById('paymentOriginalDate').value = date;
+                document.getElementById('paymentDate').value = date;
+                document.getElementById('paymentAmount').value = amount;
+                document.getElementById('paymentModal').style.display = 'block';
+            };
+            
+            window.closePaymentModal = function() {
+                document.getElementById('paymentModal').style.display = 'none';
+            };
+            
+            window.savePayment = function() {
+                const saveBtn = document.getElementById('savePaymentBtn');
+                setLoading(saveBtn, true);
+                
+                setTimeout(() => {
+                    const phone = document.getElementById('paymentStudentPhone').value;
+                    const originalDate = document.getElementById('paymentOriginalDate').value;
+                    const newDate = document.getElementById('paymentDate').value;
+                    const amount = document.getElementById('paymentAmount').value || 0;
+                    
+                    if (!newDate) {
+                        showToast('দয়া করে একটি তারিখ নির্বাচন করুন', 'error');
+                        setLoading(saveBtn, false);
+                        return;
+                    }
+                    
+                    const student = students.find(s => s.phone === phone);
+                    if (student) {
+                        if (!student.payments) student.payments = [];
+                        
+                        // Remove old payment
+                        student.payments = student.payments.filter(p => p.date !== originalDate);
+                        
+                        // Add new payment
+                        student.payments.push({
+                            date: newDate,
+                            amount: amount
+                        });
+                        
+                        // Save to localStorage
+                        localStorage.setItem('students', JSON.stringify(students));
+                        showToast('বেতনের তথ্য সফলভাবে আপডেট করা হয়েছে!', 'success');
+                        closePaymentModal();
+                        
+                        // Refresh current view
+                        if (document.getElementById('attendanceTab').classList.contains('active')) {
+                            loadStudentsForAttendance();
+                        } else if (document.getElementById('historyTab').classList.contains('active')) {
+                            loadHistory();
+                        }
+                    }
+                    setLoading(saveBtn, false);
+                }, 500);
             };
             
             // Date edit functions
@@ -1501,9 +1759,137 @@
                             loadStudentsForAttendance();
                         } else if (document.getElementById('historyTab').classList.contains('active')) {
                             loadHistory();
+                        } else if (document.getElementById('calendarTab').classList.contains('active')) {
+                            loadCalendarView();
                         }
                     }
                     setLoading(saveBtn, false);
+                }, 500);
+            };
+            
+            // Calendar View functions
+            window.loadCalendarView = function() {
+                const loadBtn = document.getElementById('loadCalendarBtn');
+                setLoading(loadBtn, true);
+                
+                setTimeout(() => {
+                    const month = document.getElementById('calendarMonth').value;
+                    const section = document.getElementById('calendarSection').value;
+                    
+                    if (!month) {
+                        showToast('দয়া করে একটি মাস নির্বাচন করুন', 'error');
+                        setLoading(loadBtn, false);
+                        return;
+                    }
+                    
+                    const [year, monthNum] = month.split('-');
+                    const startDate = new Date(year, monthNum - 1, 1);
+                    const endDate = new Date(year, monthNum, 0);
+                    
+                    let filteredStudents = students;
+                    
+                    // Filter by section
+                    if (section) {
+                        filteredStudents = filteredStudents.filter(student => student.section === section);
+                    }
+                    
+                    const calendarView = document.getElementById('calendarView');
+                    const noCalendarData = document.getElementById('noCalendarData');
+                    
+                    if (filteredStudents.length === 0) {
+                        calendarView.innerHTML = '';
+                        noCalendarData.style.display = 'block';
+                        setLoading(loadBtn, false);
+                        return;
+                    }
+                    
+                    // Group attendance by date
+                    const attendanceByDate = {};
+                    
+                    filteredStudents.forEach(student => {
+                        if (student.attendance) {
+                            Object.keys(student.attendance).forEach(date => {
+                                const attendanceDate = new Date(date);
+                                if (attendanceDate >= startDate && attendanceDate <= endDate) {
+                                    if (!attendanceByDate[date]) {
+                                        attendanceByDate[date] = [];
+                                    }
+                                    
+                                    const payment = student.payments?.find(p => p.date === date);
+                                    attendanceByDate[date].push({
+                                        student,
+                                        payment
+                                    });
+                                }
+                            });
+                        }
+                    });
+                    
+                    // Sort dates
+                    const sortedDates = Object.keys(attendanceByDate).sort();
+                    
+                    if (sortedDates.length === 0) {
+                        calendarView.innerHTML = '';
+                        noCalendarData.style.display = 'block';
+                        setLoading(loadBtn, false);
+                        return;
+                    }
+                    
+                    noCalendarData.style.display = 'none';
+                    calendarView.innerHTML = '';
+                    
+                    // Create calendar days
+                    sortedDates.forEach(date => {
+                        const day = new Date(date);
+                        const dayName = day.toLocaleDateString('bn-BD', { weekday: 'long' });
+                        const formattedDate = day.toLocaleDateString('bn-BD');
+                        
+                        const dayCard = document.createElement('div');
+                        dayCard.className = 'calendar-day';
+                        
+                        const dayHeader = document.createElement('div');
+                        dayHeader.className = 'calendar-day-header';
+                        dayHeader.innerHTML = `
+                            <span class="calendar-day-title">${dayName}</span>
+                            <span class="calendar-day-date">${formattedDate}</span>
+                        `;
+                        
+                        const studentList = document.createElement('ul');
+                        studentList.className = 'calendar-student-list';
+                        
+                        attendanceByDate[date].forEach(item => {
+                            const studentItem = document.createElement('li');
+                            studentItem.className = 'calendar-student-item';
+                            
+                            const studentName = document.createElement('span');
+                            studentName.className = 'calendar-student-name';
+                            studentName.textContent = item.student.name;
+                            
+                            const studentStatus = document.createElement('div');
+                            studentStatus.className = 'calendar-student-status';
+                            
+                            const attendedBadge = document.createElement('span');
+                            attendedBadge.className = 'badge badge-success';
+                            attendedBadge.textContent = 'পড়িয়েছি';
+                            
+                            const paidBadge = document.createElement('span');
+                            paidBadge.className = item.payment ? 'badge badge-success' : 'badge badge-danger';
+                            paidBadge.textContent = item.payment ? 'বেতন দিয়েছে' : 'বেতন বাকি';
+                            
+                            studentStatus.appendChild(attendedBadge);
+                            studentStatus.appendChild(paidBadge);
+                            
+                            studentItem.appendChild(studentName);
+                            studentItem.appendChild(studentStatus);
+                            studentList.appendChild(studentItem);
+                        });
+                        
+                        dayCard.appendChild(dayHeader);
+                        dayCard.appendChild(studentList);
+                        calendarView.appendChild(dayCard);
+                    });
+                    
+                    setLoading(loadBtn, false);
                 }, 500);
             };
             
@@ -1515,6 +1901,7 @@
                 setTimeout(() => {
                     const section = document.getElementById('historySection').value;
                     const studentPhone = document.getElementById('historyStudent').value;
+                    const month = document.getElementById('historyMonth').value;
                     
                     let filteredStudents = students;
                     
@@ -1548,6 +1935,15 @@
                         // Attendance history
                         if (student.attendance) {
                             Object.keys(student.attendance).forEach(date => {
+                                // Filter by month if selected
+                                if (month) {
+                                    const [year, monthNum] = month.split('-');
+                                    const dateObj = new Date(date);
+                                    if (dateObj.getFullYear() != year || (dateObj.getMonth() + 1) != monthNum) {
+                                        return;
+                                    }
+                                }
+                                
                                 const payment = student.payments?.find(p => p.date === date);
                                 allHistory.push({
                                     date,
@@ -1556,6 +1952,7 @@
                                     section: student.section,
                                     attended: true,
                                     paid: !!payment,
+                                    paymentAmount: payment?.amount,
                                     isReset: false
                                 });
                             });
@@ -1564,6 +1961,15 @@
                         // Reset history
                         if (student.resetHistory) {
                             student.resetHistory.forEach(reset => {
+                                // Filter by month if selected
+                                if (month) {
+                                    const [year, monthNum] = month.split('-');
+                                    const dateObj = new Date(reset.date);
+                                    if (dateObj.getFullYear() != year || (dateObj.getMonth() + 1) != monthNum) {
+                                        return;
+                                    }
+                                }
+                                
                                 allHistory.push({
                                     date: reset.date,
                                     name: student.name,
@@ -1613,15 +2019,18 @@
                                 <td>${item.phone}</td>
                                 <td>${item.section}</td>
                                 <td><span class="badge badge-success">হ্যাঁ</span></td>
-                                <td><span class="badge ${item.paid ? 'badge-success' : 'badge-danger'}">${item.paid ? 'হ্যাঁ' : 'না'}</span></td>
+                                <td>
+                                    <span class="badge ${item.paid ? 'badge-success' : 'badge-danger'}">${item.paid ? 'হ্যাঁ' : 'না'}</span>
+                                    ${item.paid ? `(${item.paymentAmount || item.student?.feeAmount || 1000} টাকা)` : ''}
+                                </td>
                                 <td><span class="badge badge-danger">না</span></td>
                                 <td>
                                     <div class="action-btns">
                                         <button onclick="removeHistoryItem('${item.phone}', '${item.date}')" class="btn btn-danger btn-sm">
                                             <i class="fas fa-trash"></i> মুছুন
                                         </button>
-                                        ${item.paid ? `<button class="btn btn-secondary btn-sm" onclick="showEditDateModal('${item.phone}', 'payment', '${item.date}')">
-                                            <i class="fas fa-edit"></i> বেতনের তারিখ এডিট
+                                        ${item.paid ? `<button class="btn btn-warning btn-sm" onclick="showPaymentModal('${item.phone}', '${item.date}', ${item.paymentAmount || item.student?.feeAmount || 1000})">
+                                            <i class="fas fa-money-bill-wave"></i> বেতন এডিট
                                         </button>` : ''}
                                     </div>
                                 </td>
@@ -1664,6 +2073,8 @@
                     let details = `নাম: ${student.name}\n`;
                     details += `ফোন: ${student.phone}\n`;
                     details += `সেকশন: ${student.section}\n`;
+                    details += `যোগদানের তারিখ: ${student.joiningDate || 'অজানা'}\n`;
+                    details += `মাসিক বেতন: ${student.feeAmount || 1000} টাকা\n`;
                     details += `বর্তমান ক্লাস: ${student.currentClasses || 0}\n`;
                     details += `মোট ক্লাস: ${student.totalClasses || 0}\n`;
                     
@@ -1671,14 +2082,8 @@
                         details += `\nপড়ানোর তারিখসমূহ:\n`;
                         const sortedDates = Object.keys(student.attendance).sort();
                         sortedDates.forEach(date => {
-                            details += `- ${date}\n`;
-                        });
-                    }
-                    
-                    if (student.payments && student.payments.length > 0) {
-                        details += `\nবেতনের তথ্য:\n`;
-                        student.payments.forEach(payment => {
-                            details += `- তারিখ: ${payment.date}\n`;
+                            const payment = student.payments?.find(p => p.date === date);
+                            details += `- ${date} ${payment ? `(বেতন দিয়েছে: ${payment.amount || student.feeAmount || 1000} টাকা)` : '(বেতন বাকি)'}\n`;
                         });
                     }
                     
@@ -1735,7 +2140,7 @@
                             <td>${student.section}</td>
                             <td>${student.currentClasses || 0}</td>
                             <td>${student.totalClasses || 0}</td>
-                            <td colspan="2">
+                            <td colspan="3">
                                 <button onclick="viewStudentDetails('${student.phone}')" class="btn btn-info btn-sm">
                                     <i class="fas fa-info-circle"></i> সম্পূর্ণ বিস্তারিত দেখুন
                                 </button>
@@ -1766,6 +2171,7 @@
                                     <td></td>
                                     <td>${date}</td>
                                     <td>${payment ? payment.date : 'নেই'}</td>
+                                    <td>${payment ? (payment.amount || student.feeAmount || 1000) + ' টাকা' : 'বাকি'}</td>
                                 `;
                                 reportList.appendChild(detailRow);
                             });
@@ -1806,6 +2212,11 @@
                 // If attendance tab, load attendance
                 if (tabId === 'attendanceTab') {
                     loadStudentsForAttendance();
+                }
+                
+                // If calendar tab, load calendar
+                if (tabId === 'calendarTab') {
+                    loadCalendarView();
                 }
             };
         });
